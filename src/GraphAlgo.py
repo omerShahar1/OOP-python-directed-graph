@@ -29,6 +29,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 self.graph = graph
                 return True
         except():
+            print()
             return False
 
     def save_to_json(self, file_name: str) -> bool:

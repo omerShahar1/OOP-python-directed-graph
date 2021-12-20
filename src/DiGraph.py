@@ -5,9 +5,9 @@ from Node import Node
 
 class DiGraph(GraphInterface, ABC):
     def __init__(self):
-        self.nodes = {}
-        self.MC = 0
-        self.edgesSize = 0
+        self.nodes = {}  # dict representation of the graph nodes. key is the node id and value is the node object
+        self.MC = 0  # count changes to the graph
+        self.edgesSize = 0  # count the amount of edges in the graph
 
     def v_size(self) -> int:
         return len(self.nodes)
@@ -31,15 +31,15 @@ class DiGraph(GraphInterface, ABC):
         if (id1 in self.nodes) and (id2 in self.nodes) and (id2 not in self.nodes[id1].outEdges):
             self.nodes[id1].outEdges[id2] = weight
             self.nodes[id2].inEdges[id1] = weight
-            self.MC = self.MC + 1
-            self.edgesSize = self.edgesSize + 1
+            self.MC += 1
+            self.edgesSize += 1
             return True
         return False
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         if node_id not in self.nodes:
             self.nodes[node_id] = Node(node_id, pos)
-            self.MC = self.MC + 1
+            self.MC += 1
             return True
         return False
 
@@ -48,25 +48,24 @@ class DiGraph(GraphInterface, ABC):
             return False
         for src in self.nodes[node_id].inEdges:
             self.nodes[src].outEdges.pop(node_id)
-            self.edgesSize = self.edgesSize - 1
-            self.MC = self.MC + 1
+            self.edgesSize -= 1
+            self.MC += 1
         for dest in self.nodes[node_id].outEdges:
             self.nodes[dest].inEdges.pop(node_id)
-            self.edgesSize = self.edgesSize - 1
-            self.MC = self.MC + 1
+            self.edgesSize -= 1
+            self.MC += 1
         self.nodes.pop(node_id)
-        self.MC = self.MC + 1
+        self.MC += 1
         return True
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         if node_id1 in self.nodes[node_id2].inEdges:
             self.nodes[node_id2].inEdges.pop(node_id1)
             self.nodes[node_id1].outEdges.pop(node_id2)
-            self.edgesSize = self.edgesSize - 1
-            self.MC = self.MC + 1
+            self.edgesSize -= 1
+            self.MC += 1
             return True
         return False
 
     def __repr__(self):
         return f'{self.nodes.values()}'
-
