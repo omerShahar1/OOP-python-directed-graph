@@ -1,5 +1,7 @@
 import copy
 import json
+import math
+import random
 from abc import ABC
 from typing import List
 from DiGraph import DiGraph
@@ -106,7 +108,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                     closestNode = list[-1]
 
             ansDist += closestDistance
-            ansList.__add__(closestNode)
+            ansList.add(closestNode)
 
         return ansList, ansDist
 
@@ -140,12 +142,14 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         fillNodes = []
         minX = 0
         minY = 0
-        for node in self.graph.get_all_v():
+        for node in self.graph.get_all_v().values():
             if node.pos is None:
                 fillNodes.append(node.id)
+            else:
+                minX = node.pos[0]
+                minY = node.pos[1]
 
-
-
-
-
-
+        for n in fillNodes:
+            node = self.graph.get_all_v().get(n)
+            node.pos[0] = minX + random.random() * 10
+            node.pos[1] = minY + random.random() * 10
