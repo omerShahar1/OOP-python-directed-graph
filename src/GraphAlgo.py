@@ -3,7 +3,7 @@ import json
 from abc import ABC
 from typing import List
 from DiGraph import DiGraph
-from Node import Node
+from queue import PriorityQueue
 from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
 
@@ -30,7 +30,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 self.graph = graph
                 return True
         except():
-            print()
+            print("file not found")
             return False
 
     def save_to_json(self, file_name: str) -> bool:
@@ -52,7 +52,37 @@ class GraphAlgo(GraphAlgoInterface, ABC):
             return False
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        pass
+        dist = {}  # shortest distance (value) from src to all other nodes (each node is id a key).
+        pathDict = {}
+        path = []
+        visited = {}
+        for i in self.graph.get_all_v():
+            dist[i] = float('inf')
+            visited[i] = False
+
+        dist[id1] = 0.0
+        pq = PriorityQueue()
+        pq.put((0, id1))
+
+        while not pq.empty():
+            (key, current) = pq.get()
+            dist[current] = key
+
+            visited[current] = True
+            for neighbor in self.graph.all_out_edges_of_node(current):  # all the nodes we can get to from current
+                distance = self.graph.all_out_edges_of_node(current)[neighbor]
+                if neighbor not in visited:
+                    newD = dist[current] + distance
+                    if newD < dist[neighbor]:
+                        pathDict[neighbor] = current
+                        pq.put((newD, neighbor))
+                        dist[neighbor] = newD
+        index = id2
+        while index != id1:
+            path.insert(0, index)
+            id2 = pathDict[index]
+
+        return dist[id2], path
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
 
@@ -105,5 +135,17 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
         return center, ans
 
+
     def plot_graph(self) -> None:
-        pass
+        fillNodes = []
+        minX = 0
+        minY = 0
+        for node in self.graph.get_all_v():
+            if node.pos is None:
+                fillNodes.append(node.id)
+
+
+
+
+
+
