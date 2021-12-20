@@ -68,5 +68,5 @@ class DiGraph(GraphInterface, ABC):
         return False
 
     def __repr__(self):
-        return f'{self.nodes}'
+        return f'{self.nodes.values()}'
 

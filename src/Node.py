@@ -6,4 +6,4 @@ class Node:
         self.outEdges = {}  # key is the dest node id. key is the weight.
 
     def __repr__(self):
-        return f'pos: {self.pos}\tin edges from: {self.inEdges}\tout nodes from: {self.outEdges}\n'
+        return f'\nnode id: {self.id} and location: {self.pos}\nedges outside: {self.inEdges}\nedges inside: {self.outEdges}\n'
