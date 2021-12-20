@@ -1,3 +1,4 @@
+import copy
 import json
 from abc import ABC
 from typing import List
@@ -54,10 +55,55 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         pass
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
-        pass
+
+        newList = copy.deepcopy(node_lst)
+
+        ansList = []
+        ansDist = 0
+
+        ansList.__add__(newList[0])
+        newList.remove(newList[0])
+
+        while (newList.__sizeof__() > 0):
+            closestNode
+            closestDistance = 0
+
+            for i in newList:
+                dist, list = self.shortest_path(ansList[-1], i)
+
+                if (dist < closestDistance):
+                    closestDistance = dist
+                    closestNode = list[-1]
+
+            ansDist += closestDistance
+            ansList.__add__(closestNode)
+
+        return ansList, ansDist
 
     def centerPoint(self) -> (int, float):
-        pass
+
+        center = -1
+        biggestDist = float('inf')
+        ans = 0
+
+        for i in self.graph.get_all_v().keys():
+            tempDist = 0
+
+            for j in self.graph.get_all_v().keys():
+
+                if (i == j):
+                    continue
+                dist, list = self.shortest_path(i, j)
+
+                if (dist > tempDist):
+                    tempDist = dist
+
+            if (tempDist < biggestDist):
+                biggestDist = tempDist
+                ans = tempDist
+                center = i
+
+        return center, ans
 
     def plot_graph(self) -> None:
         pass
