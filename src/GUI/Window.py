@@ -14,6 +14,7 @@ class Window(Frame):
         self.master.config(menu=menu)
         self.entry = Entry
         self.newWindow = Toplevel
+        self.paintGraph()
 
         fileMenu = Menu(menu)
         fileMenu.add_command(label="graph info", command=self.graphInfo)
@@ -30,6 +31,14 @@ class Window(Frame):
         editMenu.add_command(label="tsp", command=self.tsp)
         editMenu.add_command(label="center", command=self.center)
         menu.add_cascade(label="algo", menu=editMenu)
+
+    def paintGraph(self):
+        canvas = Canvas(root, width=1500, height=1500, bg="white")
+        canvas.pack(pady=20)
+        for node in self.algo.get_graph().get_all_v().values():
+            print(node)
+            canvas.create_oval(node.pos[0], node.pos[1], node.pos[0], node.pos[1], fill="red")
+
 
     def graphInfo(self):
         n_size = self.algo.get_graph().v_size()
@@ -51,7 +60,7 @@ class Window(Frame):
         Button(self.newWindow, text='create', command=self.addNodeButton).pack()
         self.entry = Entry(self.newWindow, width=50)
         self.entry.pack()
-        self.entry.insert(0, "enter as following: id,x,y,z")
+        self.entry.insert(0, "id,x,y,z")
 
     def addNodeButton(self):
         try:
@@ -75,7 +84,7 @@ class Window(Frame):
         Button(self.newWindow, text='create', command=self.addEdgeButton).pack()
         self.entry = Entry(self.newWindow, width=50)
         self.entry.pack()
-        self.entry.insert(0, "enter as following: src,dest,weight")
+        self.entry.insert(0, "src,dest,weight")
 
     def addEdgeButton(self):
         try:
@@ -100,7 +109,7 @@ class Window(Frame):
         Button(self.newWindow, text='remove', command=self.removeNodeButton).pack()
         self.entry = Entry(self.newWindow, width=50)
         self.entry.pack()
-        self.entry.insert(0, "enter node id")
+        self.entry.insert(0, "id")
 
     def removeNodeButton(self):
         try:
@@ -121,7 +130,7 @@ class Window(Frame):
         Button(self.newWindow, text='remove', command=self.removeEdgeButton).pack()
         self.entry = Entry(self.newWindow, width=50)
         self.entry.pack()
-        self.entry.insert(0, "enter the following: src,dest")
+        self.entry.insert(0, "src,dest")
 
     def removeEdgeButton(self):
         try:
@@ -145,7 +154,7 @@ class Window(Frame):
         Button(self.newWindow, text='find', command=self.shortestPathButton).pack()
         self.entry = Entry(self.newWindow, width=50)
         self.entry.pack()
-        self.entry.insert(0, "enter the following: src,dest")
+        self.entry.insert(0, "src,dest")
 
     def shortestPathButton(self):
         try:

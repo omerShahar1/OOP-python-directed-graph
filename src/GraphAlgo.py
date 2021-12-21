@@ -26,7 +26,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 edges_list: list = reader["Edges"]
                 nodes_list: list = reader["Nodes"]
                 for node in nodes_list:
-                    graph.add_node(node["id"], node["pos"])
+                    str = node["pos"].split(",")
+                    pos = (float(str[0]), float(str[1]), float(str[2]))
+                    graph.add_node(node["id"], pos)
                 for edge in edges_list:
                     graph.add_edge(edge["src"], edge["dest"], edge["w"])
                 graph.MC = 0
