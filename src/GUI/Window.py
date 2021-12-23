@@ -63,7 +63,6 @@ class Window(Frame):
             r = 0.1
             canvas.create_oval(x-r, y-r, x+r, y+r, fill="red")
 
-
     def graphInfo(self):
         n_size = self.algo.get_graph().v_size()
         e_size = self.algo.get_graph().e_size()
@@ -72,10 +71,44 @@ class Window(Frame):
         Label(self.newWindow, text=f"num of nodes: {n_size} and num of edges: {e_size}").pack()
 
     def load(self):
-        pass
+        self.newWindow = Toplevel(self.master)
+        self.newWindow.title("load")
+        self.newWindow.geometry("400x400")
+        Button(self.newWindow, text='load', command=self.loadButton).pack()
+        self.entry = Entry(self.newWindow, width=50)
+        self.entry.pack()
+        self.entry.insert(0, "file_name")
+
+    def loadButton(self):
+        try:
+            name = "" + self.entry.get()
+            answer = self.algo.load_from_json(name)
+            if not answer:
+                Label(self.newWindow, text="load didn't work").pack()
+            else:
+                Label(self.newWindow, text="load worked").pack()
+        except:
+            Label(self.newWindow, text="input invalid").pack()
 
     def save(self):
-        pass
+        self.newWindow = Toplevel(self.master)
+        self.newWindow.title("save")
+        self.newWindow.geometry("400x400")
+        Button(self.newWindow, text='save', command=self.saveButton).pack()
+        self.entry = Entry(self.newWindow, width=50)
+        self.entry.pack()
+        self.entry.insert(0, "file_name")
+
+    def saveButton(self):
+        try:
+            name = "" + self.entry.get()
+            answer = self.algo.save_to_json(name)
+            if not answer:
+                Label(self.newWindow, text="save didn't work").pack()
+            else:
+                Label(self.newWindow, text="save worked").pack()
+        except:
+            Label(self.newWindow, text="input invalid").pack()
 
     def addNode(self):
         self.newWindow = Toplevel(self.master)
@@ -228,7 +261,7 @@ class Window(Frame):
 graph = GraphInterface()
 algo = GraphAlgo(graph)
 algo.load_from_json('../../data/A0.json')
-print(algo.shortest_path(3,5))
+print(algo.shortest_path(3, 5))
 
 root = Tk()
 app = Window(algo, root)

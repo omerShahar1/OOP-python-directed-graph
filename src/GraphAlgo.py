@@ -6,7 +6,6 @@ import random
 from abc import ABC
 from typing import List
 from DiGraph import DiGraph
-from queue import PriorityQueue
 from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
 
