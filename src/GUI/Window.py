@@ -33,13 +33,13 @@ class Window(Frame):
         menu.add_cascade(label="algo", menu=editMenu)
 
     def paintGraph(self):
-        canvas = Canvas(root, width=1500, height=1500, bg="white")
+        canvas = Canvas(root, width=1500, height=600, bg="white")
         canvas.pack(pady=20)
 
-        minX = 0.1
-        minY = 0.1
-        maxX = 0.1
-        maxY = 0.1
+        minX = 0
+        minY = 0
+        maxX = 0
+        maxY = 0
 
         once = False
         for node in self.algo.get_graph().get_all_v().values():
@@ -50,18 +50,44 @@ class Window(Frame):
                 maxY = node.pos[1]
                 once = True
 
-            tempX = node.pos[0]
-            elif node.pos[0] < minX:
-                # bbbb = 0
+            # tempX = node.pos[0]
+            else:
+                if (node.pos[0] < minX):
+                    minX = node.pos[0]
+                elif (maxX < node.pos[0]):
+                    maxX = node.pos[0]
 
+                if (node.pos[1] < minY):
+                    minY = node.pos[1]
+                elif (maxY < node.pos[1]):
+                    maxY = node.pos[1]
 
+        absX = abs(maxX - minX)
+        absY = abs(maxY - minY)
+
+        # width = gtk.gdk.screen_width()
+        # height = gtk.gdk.screen_height()
+
+        scaleX = 1500 / absX * 0.6
+        scaleY = 600 / absY * 0.6
+
+        print(f"minX: {minX}, maxX: {maxX}, minY: {minY}, maxY: {maxY}")
+
+        print(f"absx: {absX}, absy: {absY}")
+        print(f"scalex: {scaleX}, scaley: {scaleY}")
 
         for node in self.algo.get_graph().get_all_v().values():
-            print(node)
-            x = node.pos[0]
-            y = node.pos[1]
-            r = 0.1
+            x = (node.pos[0] - minX) * scaleX + 20;
+            y = (node.pos[1] - minY) * scaleY + 20;
+            r = 10
             canvas.create_oval(x-r, y-r, x+r, y+r, fill="red")
+            for n in self.algo.get_graph().all_out_edges_of_node(node.id):
+                dest = self.algo.get_graph().get_all_v()[n]
+                destX = (dest.pos[0] - minX) * scaleX + 20
+                destY = (dest.pos[1] - minY) * scaleY + 20
+                canvas.create_line(x, y, destX, destY, fill="green", width=5)
+
+
 
     def graphInfo(self):
         n_size = self.algo.get_graph().v_size()
@@ -256,7 +282,6 @@ class Window(Frame):
         self.newWindow = Toplevel(self.master)
         self.newWindow.title("center")
         Label(self.newWindow, text=f"center node id: {key} and the min-maximum distance: {weight}").pack()
-
 
 graph = GraphInterface()
 algo = GraphAlgo(graph)
