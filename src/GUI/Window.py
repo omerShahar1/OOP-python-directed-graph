@@ -35,9 +35,33 @@ class Window(Frame):
     def paintGraph(self):
         canvas = Canvas(root, width=1500, height=1500, bg="white")
         canvas.pack(pady=20)
+
+        minX = 0.1
+        minY = 0.1
+        maxX = 0.1
+        maxY = 0.1
+
+        once = False
+        for node in self.algo.get_graph().get_all_v().values():
+            if (once == False):
+                minX = node.pos[0]
+                minY = node.pos[1]
+                maxX = node.pos[0]
+                maxY = node.pos[1]
+                once = True
+
+            tempX = node.pos[0]
+            elif node.pos[0] < minX:
+                # bbbb = 0
+
+
+
         for node in self.algo.get_graph().get_all_v().values():
             print(node)
-            canvas.create_oval(node.pos[0], node.pos[1], node.pos[0], node.pos[1], fill="red")
+            x = node.pos[0]
+            y = node.pos[1]
+            r = 0.1
+            canvas.create_oval(x-r, y-r, x+r, y+r, fill="red")
 
 
     def graphInfo(self):
