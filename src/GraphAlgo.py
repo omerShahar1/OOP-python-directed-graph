@@ -25,8 +25,9 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 edges_list: list = reader["Edges"]
                 nodes_list: list = reader["Nodes"]
                 for node in nodes_list:
-                    str = node["pos"].split(",")
-                    pos = (float(str[0]), float(str[1]), float(str[2]))
+                    s = node["pos"]
+                    st = str(s).split(",")
+                    pos = (float(st[0]), float(st[1]), float(st[2]))
                     graph.add_node(node["id"], pos)
                 for edge in edges_list:
                     graph.add_edge(edge["src"], edge["dest"], edge["w"])
@@ -43,7 +44,8 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 nodes = []
                 edges = []
                 for node in self.graph.get_all_v().values():
-                    nodeDict = {"pos": node.pos, "id": node.id}
+                    s = str(node.pos[0]) + "," + str(node.pos[1]) + "," + str(node.pos[2])
+                    nodeDict = {"pos": s, "id": node.id}
                     nodes.append(nodeDict)
                     for dest in self.graph.all_out_edges_of_node(node.id):
                         edgeDict = {"src": node.id, "w": node.outEdges[dest], "dest": dest}
