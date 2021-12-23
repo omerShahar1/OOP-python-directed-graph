@@ -70,12 +70,6 @@ class Window(Frame):
 
         scaleX = 1500 / absX * 0.6
         scaleY = 600 / absY * 0.6
-
-        print(f"minX: {minX}, maxX: {maxX}, minY: {minY}, maxY: {maxY}")
-
-        print(f"absx: {absX}, absy: {absY}")
-        print(f"scalex: {scaleX}, scaley: {scaleY}")
-
         for node in self.algo.get_graph().get_all_v().values():
             x = (node.pos[0] - minX) * scaleX + 20;
             y = (node.pos[1] - minY) * scaleY + 20;
@@ -113,6 +107,7 @@ class Window(Frame):
                 Label(self.newWindow, text="load didn't work").pack()
             else:
                 Label(self.newWindow, text="load worked").pack()
+                self.paintGraph()
         except:
             Label(self.newWindow, text="input invalid").pack()
 
@@ -157,6 +152,7 @@ class Window(Frame):
                 Label(self.newWindow, text="insertion didn't work").pack()
             else:
                 Label(self.newWindow, text="insertion worked").pack()
+                self.paintGraph()
         except:
             Label(self.newWindow, text="input invalid").pack()
 
@@ -171,17 +167,18 @@ class Window(Frame):
 
     def addEdgeButton(self):
         try:
-            s = "" + self.entry.get()
+            s = str(self.entry.get())
             values = s.split(",")
             src = values[0]
             dest = values[1]
             w = values[2]
-            answer = self.algo.get_graph().add_Edge(src, dest, w)
+            answer = self.algo.get_graph().add_Edge(int(src), int(dest), float(w))
 
             if not answer:
                 Label(self.newWindow, text="insertion didn't work").pack()
             else:
                 Label(self.newWindow, text="insertion worked").pack()
+                self.paintGraph()
         except:
             Label(self.newWindow, text="input invalid").pack()
 
@@ -203,6 +200,7 @@ class Window(Frame):
                 Label(self.newWindow, text="removal didn't work").pack()
             else:
                 Label(self.newWindow, text="removal worked").pack()
+                self.paintGraph()
         except:
             Label(self.newWindow, text="input invalid").pack()
 
@@ -227,6 +225,7 @@ class Window(Frame):
                 Label(self.newWindow, text="removal didn't work").pack()
             else:
                 Label(self.newWindow, text="removal worked").pack()
+                self.paintGraph()
         except:
             Label(self.newWindow, text="input invalid").pack()
 
@@ -286,7 +285,6 @@ class Window(Frame):
 graph = GraphInterface()
 algo = GraphAlgo(graph)
 algo.load_from_json('../../data/A0.json')
-print(algo.shortest_path(3, 5))
 
 root = Tk()
 app = Window(algo, root)
