@@ -49,3 +49,9 @@ class TestGraphAlgo(TestCase):
 
     def test_plot_graph(self):
         self.fail()
+
+    def test_shortest_path_for_center(self):
+        self.fail()
+
+    def test_find_next_node(self):
+        self.fail()
