@@ -9,7 +9,7 @@ from GraphInterface import GraphInterface
 
 
 class GraphAlgo(GraphAlgoInterface, ABC):
-    def __init__(self, graph: GraphInterface):
+    def __init__(self, graph: GraphInterface = GraphAlgoInterface()):
         self.graph = graph  # the graph of the algorithm
 
     def get_graph(self) -> GraphInterface:
@@ -23,10 +23,13 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 edges_list: list = reader["Edges"]
                 nodes_list: list = reader["Nodes"]
                 for node in nodes_list:
-                    s = node["pos"]
-                    st = str(s).split(",")
-                    pos = (float(st[0]), float(st[1]), float(st[2]))
-                    graph.add_node(node["id"], pos)
+                    if "pos" in node:
+                        s = node["pos"]
+                        st = str(s).split(",")
+                        pos = (float(st[0]), float(st[1]), float(st[2]))
+                        graph.add_node(node["id"], pos)
+                    else:
+                        graph.add_node(node["id"])
                 for edge in edges_list:
                     graph.add_edge(edge["src"], edge["dest"], edge["w"])
                 graph.MC = 0
@@ -42,9 +45,14 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 nodes = []
                 edges = []
                 for node in self.graph.get_all_v().values():
-                    s = str(node.pos[0]) + "," + str(node.pos[1]) + "," + str(node.pos[2])
-                    nodeDict = {"pos": s, "id": node.id}
-                    nodes.append(nodeDict)
+                    if node.pos is not None:
+                        s = str(node.pos[0]) + "," + str(node.pos[1]) + "," + str(node.pos[2])
+                        nodeDict = {"pos": s, "id": node.id}
+                        nodes.append(nodeDict)
+                    else:
+                        nodeDict = {"id": node.id}
+                        nodes.append(nodeDict)
+
                     for dest in self.graph.all_out_edges_of_node(node.id):
                         edgeDict = {"src": node.id, "w": node.outEdges[dest], "dest": dest}
                         edges.append(edgeDict)
@@ -182,9 +190,7 @@ class GraphAlgo(GraphAlgoInterface, ABC):
                 minY = node.pos[1]
 
         for n in fillNodes:
-            node = self.graph.get_all_v().get(n)
-            node.pos[0] = minX + random.random() * 10
-            node.pos[1] = minY + random.random() * 10
+            self.graph.get_all_v().get(n).pos = (minX + random.random() * 10, minY + random.random() * 10)
 
     def findNextNode(self, src: int, visited: dict, node_lst: list) -> (List[int], float, int):
         weight = float('inf')
