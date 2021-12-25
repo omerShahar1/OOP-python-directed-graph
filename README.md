@@ -15,3 +15,24 @@ after that we will assume the new node is the next in the path so we will add it
 * the save functuon will create new file and insert there all the graph data in json format.
 * the load function use the graph pre made constructer that works with a given json file name.
 * the findNextNode function is udes in the tsp function. we will call it every time we want to know the next node to go to from our current stand (also return the weight and the path we need to go throw to get there).
+
+
+# node class:
+* to create new node we need id number (int) and tuple of the node location (x,y,z)
+* every node has dict to represent the nodes we can reach from the current node with 1 edge, and all the nodes who can reach us with 1 edge. the key is always the other node id and the value is the weight of the edge.
+
+
+# graph class:
+* we can contruct an empty graph.
+* every graph has dict represent its nodes (key is id and value is the node object), integer mc to count changes to the graph and integer to count anount of edges.
+* v_size function return the size of the graph nodes dict.
+* e_size funcyion return the graph edges counter.
+* get_all_v function return the graph nodes dict.
+* all_in_edges_of_node function return the specific node dict represent the nodes who can reach the current node with 1 edge.
+* all_out_edges_of_node function return the specific node dict represent the nodes we can reach from the current node with 1 edge.
+* get_mc function return the graph changes counter.
+* add_edge function will insert the new edge data to the 2 nodes dicts and update the graph counters.
+* add_node function will insert new key and value (which we will create) to the graph nodes dict. then update its changes counter (mc).
+* remove_node function will remove the node data from all required nodes dicts and then remove the node from the graph nodes dict (and update all the counters in the procces).
+* remove_edge function will update the 2 nodes dicts and uodate the graph counters.
+
