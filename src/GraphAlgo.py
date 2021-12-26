@@ -9,7 +9,7 @@ from GraphInterface import GraphInterface
 
 
 class GraphAlgo(GraphAlgoInterface, ABC):
-    def __init__(self, graph: GraphInterface = GraphAlgoInterface()):
+    def __init__(self, graph: GraphInterface = DiGraph()):
         self.graph = graph  # the graph of the algorithm
 
     def get_graph(self) -> GraphInterface:

@@ -1,7 +1,5 @@
 from tkinter import *
-from GraphAlgo import GraphAlgo
 from GraphAlgoInterface import GraphAlgoInterface
-from GraphInterface import GraphInterface
 
 
 class Gui(Frame):
@@ -14,7 +12,7 @@ class Gui(Frame):
         self.master.config(menu=menu)
         self.entry = Entry
         self.newWindow = Toplevel
-        self.canvas = Canvas(root, width=1500, height=600, bg="white")
+        self.canvas = Canvas(master, width=1500, height=600, bg="white")
         self.canvas.pack(pady=20)
         self.paintGraph()
 
@@ -35,6 +33,9 @@ class Gui(Frame):
         menu.add_cascade(label="algo", menu=editMenu)
 
     def paintGraph(self):
+        print(len(self.algo.get_graph().get_all_v()) == 0)
+        if len(self.algo.get_graph().get_all_v()) == 0:
+            return
         self.canvas.delete('all')
         minX = 0
         minY = 0
@@ -277,13 +278,3 @@ class Gui(Frame):
         self.newWindow = Toplevel(self.master)
         self.newWindow.title("center")
         Label(self.newWindow, text=f"center node id: {key} and the min-maximum distance: {weight}").pack()
-
-
-graph = GraphInterface()
-algo = GraphAlgo(graph)
-algo.load_from_json('../data/A0.json')
-
-root = Tk()
-app = Gui(algo, root)
-root.wm_title("GUI")
-root.mainloop()
