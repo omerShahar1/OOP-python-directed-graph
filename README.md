@@ -3,6 +3,7 @@
 
 # websites used for more info:
 * https://stackabuse.com/dijkstras-algorithm-in-python/
+* https://www.geeksforgeeks.org/how-to-check-the-execution-time-of-python-script/
 
 
 
