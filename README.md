@@ -37,4 +37,4 @@ after that we will assume the new node is the next in the path so we will add it
 * remove_node function will remove the node data from all required nodes dicts and then remove the node from the graph nodes dict (and update all the counters in the procces).
 * remove_edge function will update the 2 nodes dicts and uodate the graph counters.
 
-[https://github.com/omerShahar1/oop_ex3/blob/main/Screenshot%202021-12-26%20142523.png]
+[img src=https://github.com/omerShahar1/oop_ex3/blob/main/Screenshot%202021-12-26%20142523.png]
