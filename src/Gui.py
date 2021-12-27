@@ -33,58 +33,59 @@ class Gui(Frame):
         menu.add_cascade(label="algo", menu=editMenu)
 
     def paintGraph(self):
-        print(len(self.algo.get_graph().get_all_v()) == 0)
-        if len(self.algo.get_graph().get_all_v()) == 0:
+        if self.algo.get_graph().v_size() == 0:
             return
         self.canvas.delete('all')
-        minX = 0
-        minY = 0
-        maxX = 0
-        maxY = 0
-        once = False
+        minX = float('inf')  # find min X value
+        minY = float('inf')  # find min Y value
+        maxX = float('-inf')  # find max X value
+        maxY = float('-inf')  # find max X value
         for node in self.algo.get_graph().get_all_v().values():
-            if not once:
+            if node.pos is None:  # if graph is empty then stop
+                self.algo.plot_graph()
+
+            if node.pos[0] < minX:
                 minX = node.pos[0]
-                minY = node.pos[1]
+            if maxX < node.pos[0]:
                 maxX = node.pos[0]
+            if node.pos[1] < minY:
+                minY = node.pos[1]
+            if maxY < node.pos[1]:
                 maxY = node.pos[1]
-                once = True
 
-            # tempX = node.pos[0]
-            else:
-                if (node.pos[0] < minX):
-                    minX = node.pos[0]
-                elif (maxX < node.pos[0]):
-                    maxX = node.pos[0]
-
-                if (node.pos[1] < minY):
-                    minY = node.pos[1]
-                elif (maxY < node.pos[1]):
-                    maxY = node.pos[1]
-
-        absX = abs(maxX - minX)
-        absY = abs(maxY - minY)
-
-        # width = gtk.gdk.screen_width()
-        # height = gtk.gdk.screen_height()
+        if self.algo.get_graph().v_size() == 1:  # in case we only have 1 node in the graph
+            absX = abs(maxX)
+            absY = abs(maxY)
+        else:
+            absX = abs(maxX - minX)
+            absY = abs(maxY - minY)
 
         scaleX = 1500 / absX * 0.6
         scaleY = 600 / absY * 0.6
+        nodes = []
         for node in self.algo.get_graph().get_all_v().values():
             x = (node.pos[0] - minX) * scaleX + 20
             y = (node.pos[1] - minY) * scaleY + 20
             r = 10
-            self.canvas.create_oval(x - r, y - r, x + r, y + r, fill="red")
-            for n in self.algo.get_graph().all_out_edges_of_node(node.id):
+            if node.id not in nodes:
+                self.canvas.create_oval(x - r, y - r, x + r, y + r, fill="red")
+                nodes.append(node.id)
+            for n in self.algo.get_graph().all_out_edges_of_node(node.id).keys():  # draw all out edges and the dest nodes.
                 dest = self.algo.get_graph().get_all_v()[n]
                 destX = (dest.pos[0] - minX) * scaleX + 20
                 destY = (dest.pos[1] - minY) * scaleY + 20
-                self.canvas.create_line(x, y, destX, destY, fill="green", width=5)
+                if n not in nodes:
+                    self.canvas.create_oval(destX - r, destY - r, destX + r, destY + r, fill="red")
+                    nodes.append(n)
+                if n in self.algo.get_graph().all_in_edges_of_node(node.id):
+                    self.canvas.create_line(x, y, destX, destY, arrow=BOTH)
+                else:
+                    self.canvas.create_line(x, y, destX, destY, arrow=LAST)
 
     def graphInfo(self):
         n_size = self.algo.get_graph().v_size()
         e_size = self.algo.get_graph().e_size()
-        mc = self.algo.get_graph().get_MC()
+        mc = self.algo.get_graph().get_mc()
         self.newWindow = Toplevel(self.master)
         self.newWindow.title("graph info")
         Label(self.newWindow, text=f"num of nodes: {n_size}, num of edges: {e_size} and MC value: {mc}").pack()
@@ -137,9 +138,13 @@ class Gui(Frame):
         try:
             s = str(self.entry.get())
             values = s.split(",")
-            key = int(values[0])
-            pos = (float(values[1]), float(values[2]), float(values[3]))
-            answer = self.algo.get_graph().add_node(key, pos)
+            if len(values) > 1:
+                key = int(values[0])
+                pos = (float(values[1]), float(values[2]), float(values[3]))
+                answer = self.algo.get_graph().add_node(key, pos)
+            else:
+                key = int(values[0])
+                answer = self.algo.get_graph().add_node(key)
 
             if not answer:
                 Label(self.newWindow, text="insertion didn't work").pack()
@@ -165,7 +170,7 @@ class Gui(Frame):
             src = int(values[0])
             dest = int(values[1])
             w = float(values[2])
-            answer = self.algo.get_graph().add_Edge(src, dest, w)
+            answer = self.algo.get_graph().add_edge(src, dest, w)
 
             if not answer:
                 Label(self.newWindow, text="insertion didn't work").pack()
@@ -277,4 +282,7 @@ class Gui(Frame):
         (key, weight) = self.algo.centerPoint()
         self.newWindow = Toplevel(self.master)
         self.newWindow.title("center")
-        Label(self.newWindow, text=f"center node id: {key} and the min-maximum distance: {weight}").pack()
+        if key != -1:
+            Label(self.newWindow, text=f"center node id: {key} and the min-maximum distance: {weight}").pack()
+        else:
+            Label(self.newWindow, text="no center. graph is not connected").pack()

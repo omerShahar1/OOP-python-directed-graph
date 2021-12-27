@@ -1,6 +1,6 @@
 import json
 import heapq
-import random
+from random import random
 from abc import ABC
 from typing import List
 from DiGraph import DiGraph
@@ -106,22 +106,21 @@ class GraphAlgo(GraphAlgoInterface, ABC):
         for i in node_lst:  # check if one of the given id's is illegal.
             if i not in self.graph.get_all_v().keys():
                 return [], float('inf')
-
         for key in node_lst:
             for i in node_lst:  # zero all the visited values.
                 visited[i] = False
             src = key
             visited[src] = True
             newPath = [src]  # create new path and add the src key to the new path.
-            newWeight = 0
+            newWeight = float('inf')
             while False in visited.values():  # for every src find the best path from it to the other.
                 (tempList, w, newSrc) = self.findNextNode(src, visited, node_lst)
-                if newSrc == -1:  # in case we don't have a path stop the function.
-                    return [], float('inf')
-
+                if newSrc == -1:  # in case we don't have a path stop the loop.
+                    break
+                if newWeight == float('inf'):
+                    newWeight = 0
                 newWeight += w
                 tempList.remove(src)
-
                 for i in tempList:  # insert the new path we found to the main path of the specific key
                     newPath.append(i)
                 visited[newSrc] = True
@@ -178,19 +177,35 @@ class GraphAlgo(GraphAlgoInterface, ABC):
 
         return max
 
-    def plot_graph(self) -> None:
+    def plot_graph(self):
         fillNodes = []
-        minX = 0
-        minY = 0
-        for node in self.graph.get_all_v().values():
+        minX = float('inf')
+        minY = float('inf')
+        minZ = float('inf')
+        for node in self.graph.get_all_v().values():  # check what nodes need correction and the range for that
             if node.pos is None:
-                fillNodes.append(node.id)
+                fillNodes.append(node)
             else:
-                minX = node.pos[0]
-                minY = node.pos[1]
+                if node.pos[0] < minX:
+                    minX = node.pos[0]
+                if node.pos[1] < minY:
+                    minY = node.pos[1]
+                if node.pos[2] < minZ:
+                    minZ = node.pos[2]
 
-        for n in fillNodes:
-            self.graph.get_all_v().get(n).pos = (minX + random.random() * 10, minY + random.random() * 10)
+        if len(fillNodes) == self.graph.v_size():
+            for n in fillNodes:
+                x = random()
+                y = random()
+                z = random()
+                n.setPos((x, y, z))
+            return
+
+        for node in fillNodes:
+            x = random()+minX
+            y = random()+minY
+            z = random()+minZ
+            node.setPos((x, y, z))
 
     def findNextNode(self, src: int, visited: dict, node_lst: list) -> (List[int], float, int):
         weight = float('inf')

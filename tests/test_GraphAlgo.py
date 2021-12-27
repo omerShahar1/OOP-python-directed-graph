@@ -32,19 +32,35 @@ class TestGraphAlgo(TestCase):
         self.assertNotEqual(test1, test2)
 
     def test_shortest_path(self):
+        self.algo = GraphAlgo(DiGraph())
         self.algo.get_graph().add_node(0)
         self.algo.get_graph().add_node(1)
         self.algo.get_graph().add_node(2)
         self.algo.get_graph().add_node(3)
-        self.assertEqual(self.algo.shortest_path(0, 1)[0], float('inf'))
+        self.assertEqual(self.algo.shortest_path(0, 1), (float('inf'), []))
         self.algo.get_graph().add_edge(0, 2, 5)
         self.algo.get_graph().add_edge(2, 1, 5)
         self.assertEqual(self.algo.shortest_path(0, 1)[0], 10)
 
     def test_tsp(self):
-        self.assertEqual(self.algo.TSP([1, 2, 4]), [[1, 2, 3, 4], 4.5])
+        self.algo = GraphAlgo(DiGraph())
+        self.assertEqual(self.algo.TSP([1, 2, 4]), ([], float('inf')))
+        self.algo.graph.add_node(0)
+        self.algo.graph.add_node(1)
+        self.algo.graph.add_node(2)
+        self.algo.graph.add_node(3)
+        self.algo.graph.add_node(4)
+        self.algo.graph.add_node(5)
+        self.algo.graph.add_edge(0, 1, 1)
+        self.algo.graph.add_edge(0, 2, 99)
+        self.algo.graph.add_edge(1, 3, 1)
+        self.algo.graph.add_edge(3, 4, 1)
+        self.algo.graph.add_edge(4, 5, 1)
+        self.algo.graph.add_edge(5, 2, 1)
+        self.assertEqual(self.algo.TSP([0, 2]), ([0, 1, 3, 4, 5, 2], 5.0))
 
     def test_center_point(self):
+        self.algo = GraphAlgo(DiGraph())
         self.algo.graph.add_node(0, (1, 2, 3))
         self.algo.graph.add_node(1, (1, 2, 3))
         self.algo.graph.add_node(2, (1, 2, 3))
@@ -60,11 +76,26 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(self.algo.centerPoint(), (3, 5))
 
     def test_plot_graph(self):
-        self.algo.load_from_json("../data/A1.json")
+        self.algo = GraphAlgo(DiGraph())
+        self.algo.graph.add_node(0)
+        self.algo.graph.add_node(1)
+        self.algo.graph.add_node(2)
+        self.algo.graph.add_node(3)
         self.algo.plot_graph()
+        for node in self.algo.get_graph().get_all_v().values():
+            self.assertNotEqual(node.pos, None)
+        self.algo.graph.add_node(4)
+        self.algo.plot_graph()
+        for node in self.algo.get_graph().get_all_v().values():
+            self.assertNotEqual(node.pos, None)
 
     def test_shortest_path_for_center(self):
-        self.fail()
-
-    def test_find_next_node(self):
-        self.fail()
+        self.algo = GraphAlgo(DiGraph())
+        self.algo.get_graph().add_node(0)
+        self.algo.get_graph().add_node(1)
+        self.algo.get_graph().add_node(2)
+        self.algo.get_graph().add_node(3)
+        self.assertEqual(self.algo.shortest_path(0, 1)[0], float('inf'))
+        self.algo.get_graph().add_edge(0, 2, 5)
+        self.algo.get_graph().add_edge(2, 1, 5)
+        self.assertEqual(self.algo.shortest_path(0, 1)[0], 10)
