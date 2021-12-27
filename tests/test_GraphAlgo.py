@@ -44,10 +44,7 @@ class TestGraphAlgo(TestCase):
     def test_tsp(self):
         self.assertEqual(self.algo.TSP([1, 2, 4]), [[1, 2, 3, 4], 4.5])
 
-
     def test_center_point(self):
-
-
         self.algo.graph.add_node(0, (1, 2, 3))
         self.algo.graph.add_node(1, (1, 2, 3))
         self.algo.graph.add_node(2, (1, 2, 3))
@@ -63,7 +60,8 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(self.algo.centerPoint(), (3, 5))
 
     def test_plot_graph(self):
-        self.fail()
+        self.algo.load_from_json("../data/A1.json")
+        self.algo.plot_graph()
 
     def test_shortest_path_for_center(self):
         self.fail()
