@@ -42,10 +42,25 @@ class TestGraphAlgo(TestCase):
         self.assertEqual(self.algo.shortest_path(0, 1)[0], 10)
 
     def test_tsp(self):
-        self.fail()
+        self.assertEqual(self.algo.TSP([1, 2, 4]), [[1, 2, 3, 4], 4.5])
+
 
     def test_center_point(self):
-        self.fail()
+
+
+        self.algo.graph.add_node(0, (1, 2, 3))
+        self.algo.graph.add_node(1, (1, 2, 3))
+        self.algo.graph.add_node(2, (1, 2, 3))
+        self.algo.graph.add_node(3, (1, 2, 3))
+        self.algo.graph.add_node(4, (1, 2, 3))
+        self.algo.graph.add_edge(0, 1, 1)
+        self.algo.graph.add_edge(3, 0, 3)
+        self.algo.graph.add_edge(0, 2, 2)
+        self.algo.graph.add_edge(1, 3, 4)
+        self.algo.graph.add_edge(4, 1, 3)
+        self.algo.graph.add_edge(3, 4, 2)
+        self.algo.graph.add_edge(2, 3, 3)
+        self.assertEqual(self.algo.centerPoint(), (3, 5))
 
     def test_plot_graph(self):
         self.fail()
