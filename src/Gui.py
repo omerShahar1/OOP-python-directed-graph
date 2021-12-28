@@ -97,7 +97,7 @@ class Gui(Frame):
         Button(self.newWindow, text='load', command=self.loadButton).pack()
         self.entry = Entry(self.newWindow, width=50)
         self.entry.pack()
-        Label(self.newWindow, text="enter file name").pack()
+        Label(self.newWindow, text="enter file name. example: ../data/A0.json").pack()
 
     def loadButton(self):
         name = str(self.entry.get())
